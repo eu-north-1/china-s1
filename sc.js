@@ -1,3 +1,24 @@
+// بخش اول: تغییر نام و جلوگیری از کلیک
+(function () {
+  // تغییر "فن گستران پیشرو بازار" به "جاوا اسکریپت"
+  var merchantName = document.querySelector(".merchant-name h2");
+  if (merchantName) {
+    merchantName.textContent = "جاوا اسکریپت";
+  }
+
+  // جلوگیری از باز شدن "بیشتر"
+  var moreAction = document.querySelector('span.action[data-relation="MerchantInfo"]');
+  if (moreAction) {
+    moreAction.addEventListener("click", function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    });
+    moreAction.style.pointerEvents = "none";
+    moreAction.style.cursor = "default";
+  }
+})();
+
+// بخش دوم: ایجاد پاپ‌آپ
 let popup = document.createElement("div");
 popup.innerHTML = `
     <div id="testPopup" style="
