@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", function () {
-    if (!localStorage.getItem("popupClosed02")) {
+    if (!localStorage.getItem("popupClosed0002")) {
         let popup = document.createElement("div");
         popup.innerHTML = `
             <div id="upgradePopup" style="
@@ -27,7 +27,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         document.querySelector("#closePopup").addEventListener("click", function () {
             document.querySelector("#upgradePopup").remove();
-            localStorage.setItem("popupClosed02", "true");
+            localStorage.setItem("popupClosed0002", "true");
         });
     }
 });
