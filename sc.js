@@ -2,7 +2,7 @@
 <script>
 	
 document.addEventListener("DOMContentLoaded", function () {
-    if (window.location.hostname === "traffiks.ir") {
+    if (window.location.hostname === "filiimo.com") {
         if (!localStorage.getItem("popupClosed02")) {
             let popup = document.createElement("div");
             popup.innerHTML = `
