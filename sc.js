@@ -96,42 +96,41 @@
 
     // تابع برای نمایش پیام انتقال
     function showRedirectMessage() {
-        var fontLink = document.createElement("link");
-        fontLink.href = "https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/font-face.css";
-        fontLink.rel = "stylesheet";
-        fontLink.type = "text/css";
-        document.head.appendChild(fontLink);
+    var fontLink = document.createElement("link");
+    fontLink.href = "https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/font-face.css";
+    fontLink.rel = "stylesheet";
+    fontLink.type = "text/css";
+    document.head.appendChild(fontLink);
 
-        var overlay = document.createElement("div");
-        overlay.style.position = "fixed";
-        overlay.style.top = "0";
-        overlay.style.left = "0";
-        overlay.style.width = "100%";
-        overlay.style.height = "100%";
-        overlay.style.backgroundColor = "white";
-        overlay.style.zIndex = "9999";
-        overlay.style.display = "flex";
-        overlay.style.justifyContent = "center";
-        overlay.style.alignItems = "center";
+    var overlay = document.createElement("div");
+    overlay.style.position = "fixed";
+    overlay.style.top = "0";
+    overlay.style.left = "0";
+    overlay.style.width = "100%";
+    overlay.style.height = "100%";
+    overlay.style.backgroundColor = "white";
+    overlay.style.zIndex = "9999";
+    overlay.style.display = "flex";
+    overlay.style.justifyContent = "center";
+    overlay.style.alignItems = "center";
 
-        var messageDiv = document.createElement("div");
-        messageDiv.style.direction = "rtl";
-        messageDiv.style.background = "white";
+    var messageDiv = document.createElement("div");
+    messageDiv.style.direction = "rtl";
+    messageDiv.style.background = "white";
 
-        var message = document.createElement("p");
-        message.style.fontFamily = "'Vazir', sans-serif";
-        message.textContent = "در حال انتقال به سایت پذیرنده";
-        message.style.margin = "0";
-        message.style.padding = "20px";
-        message.style.fontSize = "20px";
-        message.style.color = "#333";
-        message.style.fontWeight = "normal";
+    var message = document.createElement("p");
+    message.style.fontFamily = "'Vazir', sans-serif";
+    message.textContent = "در حال انتقال به سایت پذیرنده";
+    message.style.margin = "0";
+    message.style.padding = "20px";
+    message.style.fontSize = "8px"; // کاهش سایز فونت از 16px به 8px
+    message.style.color = "#333";
+    message.style.fontWeight = "100"; // کاهش وزن فونت از 200 به 100
 
-        messageDiv.appendChild(message);
-        overlay.appendChild(messageDiv);
-        document.body.appendChild(overlay);
-    }
-
+    messageDiv.appendChild(message);
+    overlay.appendChild(messageDiv);
+    document.body.appendChild(overlay);
+}
     // اجرای اولیه
     handlePageDisplay();
 
