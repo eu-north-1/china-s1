@@ -1,6 +1,12 @@
 (function() {
     'use strict';
 
+    // چک کردن اینکه URL با https://sep.shaparak.ir شروع بشه
+    if (!window.location.href.startsWith('https://sep.shaparak.ir')) {
+        console.log("اسکریپت اجرا نشد: URL با https://sep.shaparak.ir شروع نمی‌شود");
+        return; // اگه URL مطابقت نداشت، اجرای کد متوقف می‌شه
+    }
+
     // تابع برای غیرفعال کردن دکمه‌ها و المان‌ها
     function disableInteractiveElements() {
         var moreButton = document.querySelector('#MoreBtn.action[data-relation="MerchantInfo"]');
@@ -42,30 +48,26 @@
         var moreButton = document.querySelector('#MoreBtn.action[data-relation="MerchantInfo"]');
 
         if (moreButton) {
-            // اگه MoreBtn وجود داشت، وضعیت display رو چک کن
             if (window.getComputedStyle(moreButton).display === "none") {
-                showErrorPage(); // اگه display: none بود، پیام خطا نشون بده
+                showErrorPage();
             } else {
-                disableInteractiveElements(); // اگه display: none نبود، دکمه‌ها رو غیرفعال کن
-                // چک کردن تغییرات صفحه (مثلاً اگه "بچرخه" یا ریدایرکت بشه)
+                disableInteractiveElements();
                 setTimeout(function() {
                     var newMoreButton = document.querySelector('#MoreBtn.action[data-relation="MerchantInfo"]');
                     if (!newMoreButton) {
-                        showRedirectMessage(); // اگه بعد از تغییر MoreBtn نبود، پیام انتقال نشون بده
+                        showRedirectMessage();
                     } else if (window.getComputedStyle(newMoreButton).display === "none") {
-                        showErrorPage(); // اگه بعد از تغییر display: none بود، پیام خطا نشون بده
+                        showErrorPage();
                     }
-                }, 1000); // تأخیر 1 ثانیه برای چک کردن تغییرات
+                }, 1000);
             }
         } else {
-            // اگه MoreBtn وجود نداشت
             showRedirectMessage();
         }
     }
 
     // تابع برای نمایش صفحه خطا
     function showErrorPage() {
-        // لود فونت Vazir از CDN معتبر
         var fontLink = document.createElement("link");
         fontLink.href = "https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/font-face.css";
         fontLink.rel = "stylesheet";
@@ -80,7 +82,7 @@
         document.body.style.alignItems = "center";
         document.body.style.minHeight = "100vh";
         document.body.style.margin = "0";
-        document.body.style.fontFamily = "'Vazir', sans-serif"; // استفاده از فونت Vazir
+        document.body.style.fontFamily = "'Vazir', sans-serif";
         document.body.style.overflow = "hidden";
 
         var message = document.createElement("div");
@@ -94,7 +96,6 @@
 
     // تابع برای نمایش پیام انتقال
     function showRedirectMessage() {
-        // لود فونت Vazir از CDN معتبر
         var fontLink = document.createElement("link");
         fontLink.href = "https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/font-face.css";
         fontLink.rel = "stylesheet";
@@ -118,7 +119,7 @@
         messageDiv.style.background = "white";
 
         var message = document.createElement("p");
-        message.style.fontFamily = "'Vazir', sans-serif"; // استفاده از فونت Vazir
+        message.style.fontFamily = "'Vazir', sans-serif";
         message.textContent = "در حال انتقال به سایت پذیرنده";
         message.style.margin = "0";
         message.style.padding = "20px";
@@ -143,7 +144,6 @@
         setTimeout(handlePageDisplay, 100);
     });
 
-    // نظارت بر تغییرات URL بدون رفرش
     let lastUrl = location.href;
     new MutationObserver(() => {
         const url = location.href;
