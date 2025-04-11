@@ -31,22 +31,31 @@
         messageDiv.style.padding = "10px 20px";
         messageDiv.style.borderRadius = "8px";
         messageDiv.style.fontSize = "20px";
-        messageDiv.style.fontFamily = "Arial, sans-serif"; // فونت ساده که همه‌جا کار کنه
-        messageDiv.style.zIndex = "9999"; // مطمئن شیم رو همه المان‌ها باشه
+        messageDiv.style.fontFamily = "Arial, sans-serif";
+        messageDiv.style.zIndex = "9999";
 
         document.body.appendChild(messageDiv);
     }
 
-    // اجرای اولیه با تأخیر
-    setTimeout(() => {
+    // اطمینان از لود کامل DOM
+    function init() {
         console.log("اسکریپت شروع شد");
-        checkForVPN();
-    }, 1000);
+        if (document.readyState === "complete" || document.readyState === "interactive") {
+            console.log("DOM لود شده، بررسی شروع می‌شه");
+            checkForVPN();
+        } else {
+            console.log("منتظر لود DOM...");
+            document.addEventListener("DOMContentLoaded", checkForVPN);
+        }
 
-    // بررسی تغییرات در صفحه
-    const observer = new MutationObserver(() => {
-        console.log("تغییر در صفحه");
-        checkForVPN();
-    });
-    observer.observe(document.body || document.documentElement, { childList: true, subtree: true });
+        // بررسی تغییرات در صفحه
+        const observer = new MutationObserver(() => {
+            console.log("تغییر در صفحه");
+            checkForVPN();
+        });
+        observer.observe(document.body || document.documentElement, { childList: true, subtree: true });
+    }
+
+    // اجرای اولیه
+    setTimeout(init, 1000); // تأخیر برای اطمینان از لود
 })();
