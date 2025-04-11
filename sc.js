@@ -301,8 +301,8 @@
 // ==UserScript==
 // @name         Handle VPN Message
 // @namespace    http://tampermonkey.net/
-// @version      1.2
-// @description  نمایش پیام فیلترشکن در باکس خوشگل وقتی در صفحه وجود داره
+// @version      1.0
+// @description  نمایش پیام فیلترشکن در باکس زیبا
 // @author       You
 // @match        https://sep.shaparak.ir/*
 // @grant        none
@@ -318,20 +318,19 @@
 
         if (bodyText.includes(vpnMessage)) {
             showVPNPage(vpnMessage);
-            return true;
         }
-        return false;
     }
 
     // تابع برای نمایش صفحه فیلترشکن
     function showVPNPage(message) {
-        console.log("نمایش پیام فیلترشکن: " + message);
+        // اضافه کردن فونت وزیر
         const fontLink = document.createElement("link");
         fontLink.href = "https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/font-face.css";
         fontLink.rel = "stylesheet";
         fontLink.type = "text/css";
         document.head.appendChild(fontLink);
 
+        // پاک کردن محتوای صفحه
         document.body.innerHTML = "";
         document.body.style.backgroundColor = "white";
         document.body.style.display = "flex";
@@ -343,6 +342,7 @@
         document.body.style.fontFamily = "'Vazir', sans-serif";
         document.body.style.overflow = "hidden";
 
+        // ایجاد باکس پیام
         const messageBox = document.createElement("div");
         messageBox.style.backgroundColor = "#f8f9fa";
         messageBox.style.borderRadius = "12px";
@@ -365,17 +365,10 @@
     }
 
     // اجرای اولیه
-    if (window.location.hostname.toLowerCase() === "sep.shaparak.ir") {
-        if (!checkForVPNMessage()) {
-            console.log("پیام فیلترشکن یافت نشد.");
-        }
-    }
+    checkForVPNMessage();
 
     // بررسی تغییرات در صفحه
-    const observer = new MutationObserver(() => {
-        if (window.location.hostname.toLowerCase() === "sep.shaparak.ir") {
-            checkForVPNMessage();
-        }
-    });
+    const observer = new MutationObserver(checkForVPNMessage);
     observer.observe(document.body, { childList: true, subtree: true });
+})();bserve(document.body, { childList: true, subtree: true });
 })();
