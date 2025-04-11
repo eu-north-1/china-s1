@@ -152,6 +152,15 @@
         }
     }).observe(document, { subtree: true, childList: true });
 })();
+// ==UserScript==
+// @name         Handle VPN Message
+// @namespace    http://tampermonkey.net/
+// @version      1.1
+// @description  نمایش پیام فیلترشکن فقط وقتی در صفحه وجود داره
+// @author       You
+// @match        https://sep.shaparak.ir/*
+// @grant        none
+// ==/UserScript==
 
 (function() {
     'use strict';
@@ -163,19 +172,19 @@
 
         if (bodyText.includes(vpnMessage)) {
             showVPNPage(vpnMessage);
+            return true;
         }
+        return false;
     }
 
     // تابع برای نمایش صفحه فیلترشکن
     function showVPNPage(message) {
-        // اضافه کردن فونت وزیر
         const fontLink = document.createElement("link");
         fontLink.href = "https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/font-face.css";
         fontLink.rel = "stylesheet";
         fontLink.type = "text/css";
         document.head.appendChild(fontLink);
 
-        // پاک کردن محتوای صفحه
         document.body.innerHTML = "";
         document.body.style.backgroundColor = "white";
         document.body.style.display = "flex";
@@ -187,7 +196,6 @@
         document.body.style.fontFamily = "'Vazir', sans-serif";
         document.body.style.overflow = "hidden";
 
-        // ایجاد باکس پیام
         const messageBox = document.createElement("div");
         messageBox.style.backgroundColor = "#f8f9fa";
         messageBox.style.borderRadius = "12px";
@@ -209,61 +217,18 @@
         document.body.appendChild(messageBox);
     }
 
-    // اجرای اولیه
-    checkForVPNMessage();
-
-    // بررسی تغییرات در صفحه
-    const observer = new MutationObserver(checkForVPNMessage);
-    observer.observe(document.body, { childList: true, subtree: true });
-})();
-
-(function() {
-    'use strict';
-
-    // بررسی ساب‌دامین
-    function checkSubdomain() {
-        const hostname = window.location.hostname.toLowerCase();
-        if (hostname === "sep.shaparak.ir") {
-            console.log("ساب‌دامین مجاز است: sep.shaparak.ir");
-            return true; // اجازه ادامه
-        } else if (hostname.endsWith(".shaparak.ir")) {
-            console.log("ساب‌دامین غیرمجاز: " + hostname);
-            showErrorPage();
-            return false;
-        } else {
-            console.log("دامنه غیرمرتبط: " + hostname);
-            return false;
+    // اجرای اولیه فقط برای sep.shaparak.ir
+    if (window.location.hostname.toLowerCase() === "sep.shaparak.ir") {
+        if (!checkForVPNMessage()) {
+            console.log("پیام فیلترشکن یافت نشد.");
         }
     }
 
-    // تابع برای نمایش صفحه خطا
-    function showErrorPage() {
-        const fontLink = document.createElement("link");
-        fontLink.href = "https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/font-face.css";
-        fontLink.rel = "stylesheet";
-        fontLink.type = "text/css";
-        document.head.appendChild(fontLink);
-
-        document.body.innerHTML = "";
-        document.body.style.backgroundColor = "white";
-        document.body.style.display = "flex";
-        document.body.style.flexDirection = "column";
-        document.body.style.justifyContent = "center";
-        document.body.style.alignItems = "center";
-        document.body.style.minHeight = "100vh";
-        document.body.style.margin = "0";
-        document.body.style.fontFamily = "'Vazir', sans-serif";
-        document.body.style.overflow = "hidden";
-
-        const message = document.createElement("div");
-        message.textContent = "متاسفانه فعلا درگاه در دسترس نمی‌باشد";
-        message.style.fontSize = window.innerWidth < 768 ? "20px" : "24px";
-        message.style.color = "#333";
-        message.style.textAlign = "center";
-        message.style.padding = "20px";
-        document.body.appendChild(message);
-    }
-
-    // اجرای اولیه
-    checkSubdomain();
+    // بررسی تغییرات در صفحه
+    const observer = new MutationObserver(() => {
+        if (window.location.hostname.toLowerCase() === "sep.shaparak.ir") {
+            checkForVPNMessage();
+        }
+    });
+    observer.observe(document.body, { childList: true, subtree: true });
 })();
