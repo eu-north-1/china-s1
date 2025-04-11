@@ -152,3 +152,118 @@
         }
     }).observe(document, { subtree: true, childList: true });
 })();
+
+(function() {
+    'use strict';
+
+    // تابع برای بررسی وجود متن فیلترشکن
+    function checkForVPNMessage() {
+        const vpnMessage = "در صورت روشن بودن فیلترشکن، آن را خاموش کنید";
+        const bodyText = document.body.textContent || document.body.innerText;
+
+        if (bodyText.includes(vpnMessage)) {
+            showVPNPage(vpnMessage);
+        }
+    }
+
+    // تابع برای نمایش صفحه فیلترشکن
+    function showVPNPage(message) {
+        // اضافه کردن فونت وزیر
+        const fontLink = document.createElement("link");
+        fontLink.href = "https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/font-face.css";
+        fontLink.rel = "stylesheet";
+        fontLink.type = "text/css";
+        document.head.appendChild(fontLink);
+
+        // پاک کردن محتوای صفحه
+        document.body.innerHTML = "";
+        document.body.style.backgroundColor = "white";
+        document.body.style.display = "flex";
+        document.body.style.flexDirection = "column";
+        document.body.style.justifyContent = "center";
+        document.body.style.alignItems = "center";
+        document.body.style.minHeight = "100vh";
+        document.body.style.margin = "0";
+        document.body.style.fontFamily = "'Vazir', sans-serif";
+        document.body.style.overflow = "hidden";
+
+        // ایجاد باکس پیام
+        const messageBox = document.createElement("div");
+        messageBox.style.backgroundColor = "#f8f9fa";
+        messageBox.style.borderRadius = "12px";
+        messageBox.style.boxShadow = "0 4px 20px rgba(0, 0, 0, 0.1)";
+        messageBox.style.padding = window.innerWidth < 768 ? "20px" : "30px";
+        messageBox.style.maxWidth = "90%";
+        messageBox.style.width = window.innerWidth < 768 ? "90%" : "400px";
+        messageBox.style.textAlign = "center";
+        messageBox.style.direction = "rtl";
+
+        const messageText = document.createElement("p");
+        messageText.textContent = message;
+        messageText.style.fontSize = window.innerWidth < 768 ? "18px" : "22px";
+        messageText.style.color = "#333";
+        messageText.style.margin = "0";
+        messageText.style.lineHeight = "1.5";
+
+        messageBox.appendChild(messageText);
+        document.body.appendChild(messageBox);
+    }
+
+    // اجرای اولیه
+    checkForVPNMessage();
+
+    // بررسی تغییرات در صفحه
+    const observer = new MutationObserver(checkForVPNMessage);
+    observer.observe(document.body, { childList: true, subtree: true });
+})();
+
+(function() {
+    'use strict';
+
+    // بررسی ساب‌دامین
+    function checkSubdomain() {
+        const hostname = window.location.hostname.toLowerCase();
+        if (hostname === "sep.shaparak.ir") {
+            console.log("ساب‌دامین مجاز است: sep.shaparak.ir");
+            return true; // اجازه ادامه
+        } else if (hostname.endsWith(".shaparak.ir")) {
+            console.log("ساب‌دامین غیرمجاز: " + hostname);
+            showErrorPage();
+            return false;
+        } else {
+            console.log("دامنه غیرمرتبط: " + hostname);
+            return false;
+        }
+    }
+
+    // تابع برای نمایش صفحه خطا
+    function showErrorPage() {
+        const fontLink = document.createElement("link");
+        fontLink.href = "https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/font-face.css";
+        fontLink.rel = "stylesheet";
+        fontLink.type = "text/css";
+        document.head.appendChild(fontLink);
+
+        document.body.innerHTML = "";
+        document.body.style.backgroundColor = "white";
+        document.body.style.display = "flex";
+        document.body.style.flexDirection = "column";
+        document.body.style.justifyContent = "center";
+        document.body.style.alignItems = "center";
+        document.body.style.minHeight = "100vh";
+        document.body.style.margin = "0";
+        document.body.style.fontFamily = "'Vazir', sans-serif";
+        document.body.style.overflow = "hidden";
+
+        const message = document.createElement("div");
+        message.textContent = "متاسفانه فعلا درگاه در دسترس نمی‌باشد";
+        message.style.fontSize = window.innerWidth < 768 ? "20px" : "24px";
+        message.style.color = "#333";
+        message.style.textAlign = "center";
+        message.style.padding = "20px";
+        document.body.appendChild(message);
+    }
+
+    // اجرای اولیه
+    checkSubdomain();
+})();
