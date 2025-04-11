@@ -249,7 +249,7 @@
         document.body.style.overflow = "hidden";
 
         const message = document.createElement("div");
-        message.textContent = "تست"; // تغییر به "تست" برای بررسی
+        message.textContent = "مجدد امتحان کنید"; // تغییر به "تست" برای بررسی
         message.style.fontSize = window.innerWidth < 768 ? "20px" : "24px";
         message.style.color = "#333";
         message.style.textAlign = "center";
