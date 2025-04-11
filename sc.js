@@ -163,12 +163,11 @@
     }).observe(document, { subtree: true, childList: true });
 })();
 
-
 // ==UserScript==
 // @name         Restrict Shaparak Subdomains
 // @namespace    http://tampermonkey.net/
-// @version      1.1
-// @description  محدود کردن دسترسی به ساب‌دامین sep.shaparak.ir و نمایش تست
+// @version      1.2
+// @description  محدود کردن دسترسی به ساب‌دامین sep.shaparak.ir و نمایش پیام خوشگل
 // @author       You
 // @match        https://*.shaparak.ir/*
 // @grant        none
@@ -248,13 +247,25 @@
         document.body.style.fontFamily = "'Vazir', sans-serif";
         document.body.style.overflow = "hidden";
 
-        const message = document.createElement("div");
-        message.textContent = "مجدد امتحان کنید"; // تغییر به "تست" برای بررسی
-        message.style.fontSize = window.innerWidth < 768 ? "20px" : "24px";
-        message.style.color = "#333";
-        message.style.textAlign = "center";
-        message.style.padding = "20px";
-        document.body.appendChild(message);
+        const messageBox = document.createElement("div");
+        messageBox.style.backgroundColor = "#f8f9fa";
+        messageBox.style.borderRadius = "12px";
+        messageBox.style.boxShadow = "0 4px 20px rgba(0, 0, 0, 0.1)";
+        messageBox.style.padding = window.innerWidth < 768 ? "20px" : "30px";
+        messageBox.style.maxWidth = "90%";
+        messageBox.style.width = window.innerWidth < 768 ? "90%" : "400px";
+        messageBox.style.textAlign = "center";
+        messageBox.style.direction = "rtl";
+
+        const messageText = document.createElement("p");
+        messageText.textContent = "مجدد امتحان کنید";
+        messageText.style.fontSize = window.innerWidth < 768 ? "18px" : "22px";
+        messageText.style.color = "#333";
+        messageText.style.margin = "0";
+        messageText.style.lineHeight = "1.5";
+
+        messageBox.appendChild(messageText);
+        document.body.appendChild(messageBox);
     }
 
     // بررسی ساب‌دامین
