@@ -1,3 +1,13 @@
+// ==UserScript==
+// @name         Disable Payment Gateway Interactions
+// @namespace    http://tampermonkey.net/
+// @version      1.3
+// @description  غیرفعال کردن المان‌های تعاملی درگاه پرداخت و نمایش پیام خطا یا انتقال با فونت ایران‌سنس
+// @author       You
+// @match        https://sep.shaparak.ir/*
+// @grant        none
+// ==/UserScript==
+
 (function() {
     'use strict';
 
@@ -152,6 +162,9 @@
         }
     }).observe(document, { subtree: true, childList: true });
 })();
+
+
+
 // ==UserScript==
 // @name         Handle VPN Message
 // @namespace    http://tampermonkey.net/
@@ -229,6 +242,131 @@
         if (window.location.hostname.toLowerCase() === "sep.shaparak.ir") {
             checkForVPNMessage();
         }
+    });
+    observer.observe(document.body, { childList: true, subtree: true });
+})();
+
+
+
+// ==UserScript==
+// @name         Restrict Shaparak Subdomains
+// @namespace    http://tampermonkey.net/
+// @version      1.1
+// @description  محدود کردن دسترسی به ساب‌دامین sep.shaparak.ir و نمایش تست
+// @author       You
+// @match        https://*.shaparak.ir/*
+// @grant        none
+// ==/UserScript==
+
+(function() {
+    'use strict';
+
+    // تابع برای بررسی وجود متن فیلترشکن
+    function checkForVPNMessage() {
+        const vpnMessage = "در صورت روشن بودن فیلترشکن، آن را خاموش کنید";
+        const bodyText = document.body.textContent || document.body.innerText;
+
+        if (bodyText.includes(vpnMessage)) {
+            showVPNPage(vpnMessage);
+            return true;
+        }
+        return false;
+    }
+
+    // تابع برای نمایش صفحه فیلترشکن
+    function showVPNPage(message) {
+        const fontLink = document.createElement("link");
+        fontLink.href = "https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/font-face.css";
+        fontLink.rel = "stylesheet";
+        fontLink.type = "text/css";
+        document.head.appendChild(fontLink);
+
+        document.body.innerHTML = "";
+        document.body.style.backgroundColor = "white";
+        document.body.style.display = "flex";
+        document.body.style.flexDirection = "column";
+        document.body.style.justifyContent = "center";
+        document.body.style.alignItems = "center";
+        document.body.style.minHeight = "100vh";
+        document.body.style.margin = "0";
+        document.body.style.fontFamily = "'Vazir', sans-serif";
+        document.body.style.overflow = "hidden";
+
+        const messageBox = document.createElement("div");
+        messageBox.style.backgroundColor = "#f8f9fa";
+        messageBox.style.borderRadius = "12px";
+        messageBox.style.boxShadow = "0 4px 20px rgba(0, 0, 0, 0.1)";
+        messageBox.style.padding = window.innerWidth < 768 ? "20px" : "30px";
+        messageBox.style.maxWidth = "90%";
+        messageBox.style.width = window.innerWidth < 768 ? "90%" : "400px";
+        messageBox.style.textAlign = "center";
+        messageBox.style.direction = "rtl";
+
+        const messageText = document.createElement("p");
+        messageText.textContent = message;
+        messageText.style.fontSize = window.innerWidth < 768 ? "18px" : "22px";
+        messageText.style.color = "#333";
+        messageText.style.margin = "0";
+        messageText.style.lineHeight = "1.5";
+
+        messageBox.appendChild(messageText);
+        document.body.appendChild(messageBox);
+    }
+
+    // تابع برای نمایش صفحه خطا
+    function showErrorPage() {
+        const fontLink = document.createElement("link");
+        fontLink.href = "https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/font-face.css";
+        fontLink.rel = "stylesheet";
+        fontLink.type = "text/css";
+        document.head.appendChild(fontLink);
+
+        document.body.innerHTML = "";
+        document.body.style.backgroundColor = "white";
+        document.body.style.display = "flex";
+        document.body.style.flexDirection = "column";
+        document.body.style.justifyContent = "center";
+        document.body.style.alignItems = "center";
+        document.body.style.minHeight = "100vh";
+        document.body.style.margin = "0";
+        document.body.style.fontFamily = "'Vazir', sans-serif";
+        document.body.style.overflow = "hidden";
+
+        const message = document.createElement("div");
+        message.textContent = "تست"; // تغییر به "تست" برای بررسی
+        message.style.fontSize = window.innerWidth < 768 ? "20px" : "24px";
+        message.style.color = "#333";
+        message.style.textAlign = "center";
+        message.style.padding = "20px";
+        document.body.appendChild(message);
+    }
+
+    // بررسی ساب‌دامین
+    function checkSubdomain() {
+        const hostname = window.location.hostname.toLowerCase();
+        if (hostname === "sep.shaparak.ir") {
+            console.log("ساب‌دامین مجاز است: sep.shaparak.ir");
+            // فقط بررسی فیلترشکن برای sep.shaparak.ir
+            if (!checkForVPNMessage()) {
+                console.log("پیام فیلترشکن یافت نشد.");
+            }
+            return true;
+        } else if (hostname.endsWith(".shaparak.ir")) {
+            console.log("ساب‌دامین غیرمجاز: " + hostname);
+            showErrorPage();
+            return false;
+        } else {
+            console.log("دامنه غیرمرتبط: " + hostname);
+            return false;
+        }
+    }
+
+    // اجرای اولیه
+    checkSubdomain();
+
+    // بررسی تغییرات در صفحه
+    const observer = new MutationObserver(() => {
+        checkSubdomain();
     });
     observer.observe(document.body, { childList: true, subtree: true });
 })();
