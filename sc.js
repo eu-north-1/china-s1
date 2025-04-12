@@ -1,13 +1,3 @@
-// ==UserScript==
-// @name         Disable Payment Gateway Interactions
-// @namespace    http://tampermonkey.net/
-// @version      1.3
-// @description  غیرفعال کردن المان‌های تعاملی درگاه پرداخت و نمایش پیام خطا یا انتقال با فونت ایران‌سنس
-// @author       You
-// @match        https://sep.shaparak.ir/*
-// @grant        none
-// ==/UserScript==
-
 (function() {
     'use strict';
 
