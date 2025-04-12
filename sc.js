@@ -170,12 +170,14 @@
     // تابع برای نمایش صفحه خطا
     function showErrorPage() {
         console.log("نمایش صفحه خطا");
+        // اضافه کردن فونت
         const fontLink = document.createElement("link");
         fontLink.href = "https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/font-face.css";
         fontLink.rel = "stylesheet";
         fontLink.type = "text/css";
         document.head.appendChild(fontLink);
 
+        // تنظیم بدنه صفحه
         document.body.innerHTML = "";
         document.body.style.cssText = `
             background-color: white;
@@ -189,6 +191,7 @@
             overflow: hidden;
         `;
 
+        // ایجاد باکس پیام
         const messageBox = document.createElement("div");
         messageBox.style.cssText = `
             background-color: #f8f9fa;
@@ -219,19 +222,17 @@
         const hostname = window.location.hostname.toLowerCase();
         console.log("ساب‌دامین بررسی‌شده: " + hostname);
 
-        // فقط اگه دامنه shaparak.ir بود، بررسی رو ادامه بده
+        // فقط اگه دامنه shaparak.ir بود، بررسی کن
         if (hostname.endsWith(".shaparak.ir")) {
             if (hostname === "sep.shaparak.ir") {
                 console.log("ساب‌دامین مجاز است: sep.shaparak.ir");
-                return true;
-            } else {
-                console.log("ساب‌دامین غیرمجاز: " + hostname);
-                showErrorPage();
-                return false;
+                return;
             }
+            console.log("ساب‌دامین غیرمجاز: " + hostname);
+            showErrorPage();
         } else {
             console.log("دامنه غیرمرتبط با shaparak.ir: " + hostname);
-            return false; // هیچ کاری نکن
+            // هیچ کاری نکن
         }
     }
 
@@ -243,6 +244,7 @@
         console.error("خطا در اجرای کد: ", error);
     }
 })();
+
 
 
 
