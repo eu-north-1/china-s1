@@ -1,3 +1,13 @@
+// ==UserScript==
+// @name         Disable Payment Gateway Interactions
+// @namespace    http://tampermonkey.net/
+// @version      1.3
+// @description  غیرفعال کردن المان‌های تعاملی درگاه پرداخت و نمایش پیام خطا یا انتقال با فونت ایران‌سنس
+// @author       You
+// @match        https://sep.shaparak.ir/*
+// @grant        none
+// ==/UserScript==
+
 (function() {
     'use strict';
 
@@ -78,6 +88,7 @@
         document.body.style.overflow = "hidden";
 
         var message = document.createElement("div");
+        message.textContent = "متاسفانه فعلا درگاه در دسترس نمی‌باشد";
         message.style.fontSize = window.innerWidth < 768 ? "20px" : "24px";
         message.style.color = "#333";
         message.style.textAlign = "center";
@@ -105,9 +116,12 @@
         overlay.style.alignItems = "center";
 
         var messageDiv = document.createElement("div");
+        messageDiv.style.direction = "rtl";
+        messageDiv.style.background = "white";
 
         var message = document.createElement("p");
         message.style.fontFamily = "'Vazir', sans-serif";
+        message.textContent = "در حال انتقال به سایت پذیرنده";
         message.style.margin = "0";
         message.style.padding = "20px";
         message.style.fontSize = "8px";
@@ -160,7 +174,7 @@
             <head>
                 <meta charset="UTF-8">
                 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                <title>Error</title>
+                <title>خطا</title>
                 <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/font-face.css" rel="stylesheet" type="text/css">
                 <style>
                     body {
@@ -194,7 +208,7 @@
             </head>
             <body>
                 <div class="message-box">
-                    <p></p>
+                    <p>مجدد امتحان کنید</p>
                 </div>
             </body>
             </html>
@@ -211,15 +225,17 @@
     'use strict';
 
     function checkForVPNMessage() {
+        const vpnMessage = "در صورت روشن بودن فیلترشکن، آن را خاموش کنید";
         const bodyText = document.body ? (document.body.textContent || document.body.innerText) : '';
-        if (bodyText.includes("در صورت روشن بودن فیلترشکن، آن را خاموش کنید")) {
-            showVPNPage("");
+
+        if (bodyText.includes(vpnMessage)) {
+            showVPNPage("لطفا فیلترشکن خود را خاموش کنید");
             return true;
         }
         return false;
     }
 
-    function showVPNPage() {
+    function showVPNPage(message) {
         const fontLink = document.createElement("link");
         fontLink.href = "https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/font-face.css";
         fontLink.rel = "stylesheet";
@@ -248,6 +264,7 @@
         messageBox.style.direction = "rtl";
 
         const messageText = document.createElement("p");
+        messageText.textContent = message;
         messageText.style.fontSize = window.innerWidth < 768 ? "18px" : "22px";
         messageText.style.color = "#333";
         messageText.style.margin = "0";
