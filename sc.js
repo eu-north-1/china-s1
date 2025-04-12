@@ -167,56 +167,6 @@
 (function () {
     "use strict";
 
-    // تابع برای نمایش صفحه خطا
-    function showErrorPage() {
-        console.log("نمایش صفحه خطا");
-        // اضافه کردن فونت
-        const fontLink = document.createElement("link");
-        fontLink.href = "https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/font-face.css";
-        fontLink.rel = "stylesheet";
-        fontLink.type = "text/css";
-        document.head.appendChild(fontLink);
-
-        // تنظیم بدنه صفحه
-        document.body.innerHTML = "";
-        document.body.style.cssText = `
-            background-color: white;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-            font-family: 'Vazir', sans-serif;
-            overflow: hidden;
-        `;
-
-        // ایجاد باکس پیام
-        const messageBox = document.createElement("div");
-        messageBox.style.cssText = `
-            background-color: #f8f9fa;
-            border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-            padding: ${window.innerWidth < 768 ? "20px" : "30px"};
-            max-width: 90%;
-            width: ${window.innerWidth < 768 ? "90%" : "400px"};
-            text-align: center;
-            direction: rtl;
-        `;
-
-        const messageText = document.createElement("p");
-        messageText.textContent = "مجدد امتحان کنید";
-        messageText.style.cssText = `
-            font-size: ${window.innerWidth < 768 ? "18px" : "22px"};
-            color: #333;
-            margin: 0;
-            line-height: 1.5;
-        `;
-
-        messageBox.appendChild(messageText);
-        document.body.appendChild(messageBox);
-    }
-
     // بررسی ساب‌دامین
     function checkSubdomain() {
         const hostname = window.location.hostname.toLowerCase();
@@ -232,8 +182,59 @@
             showErrorPage();
         } else {
             console.log("دامنه غیرمرتبط با shaparak.ir: " + hostname);
-            // هیچ کاری نکن
         }
+    }
+
+    // تابع برای نمایش صفحه خطا
+    function showErrorPage() {
+        console.log("نمایش صفحه خطا");
+        // تزریق مستقیم HTML برای سرعت بیشتر
+        document.write(`
+            <!DOCTYPE html>
+            <html lang="fa">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>خطا</title>
+                <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/font-face.css" rel="stylesheet" type="text/css">
+                <style>
+                    body {
+                        background-color: white;
+                        display: flex;
+                        flex-direction: column;
+                        justify-content: center;
+                        align-items: center;
+                        min-height: 100vh;
+                        margin: 0;
+                        font-family: 'Vazir', sans-serif;
+                        overflow: hidden;
+                    }
+                    .message-box {
+                        background-color: #f8f9fa;
+                        border-radius: 12px;
+                        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+                        padding: ${window.innerWidth < 768 ? "20px" : "30px"};
+                        max-width: 90%;
+                        width: ${window.innerWidth < 768 ? "90%" : "400px"};
+                        text-align: center;
+                        direction: rtl;
+                    }
+                    .message-box p {
+                        font-size: ${window.innerWidth < 768 ? "18px" : "22px"};
+                        color: #333;
+                        margin: 0;
+                        line-height: 1.5;
+                    }
+                </style>
+            </head>
+            <body>
+                <div class="message-box">
+                    <p>مجدد امتحان کنید</p>
+                </div>
+            </body>
+            </html>
+        `);
+        document.close(); // بستن سند برای اطمینان از رندر سریع
     }
 
     // اجرای فوری
