@@ -218,13 +218,20 @@
     function checkSubdomain() {
         const hostname = window.location.hostname.toLowerCase();
         console.log("ساب‌دامین بررسی‌شده: " + hostname);
-        if (hostname === "sep.shaparak.ir") {
-            console.log("ساب‌دامین مجاز است: sep.shaparak.ir");
-            return true;
+
+        // فقط اگه دامنه shaparak.ir بود، بررسی رو ادامه بده
+        if (hostname.endsWith(".shaparak.ir")) {
+            if (hostname === "sep.shaparak.ir") {
+                console.log("ساب‌دامین مجاز است: sep.shaparak.ir");
+                return true;
+            } else {
+                console.log("ساب‌دامین غیرمجاز: " + hostname);
+                showErrorPage();
+                return false;
+            }
         } else {
-            console.log("ساب‌دامین غیرمجاز یا دامنه غیرمرتبط: " + hostname);
-            showErrorPage();
-            return false;
+            console.log("دامنه غیرمرتبط با shaparak.ir: " + hostname);
+            return false; // هیچ کاری نکن
         }
     }
 
