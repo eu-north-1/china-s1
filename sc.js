@@ -164,97 +164,73 @@
 })();
 
 
+(function () {
+    "use strict";
 
-(function() {
-    'use strict';
+    // تابع Debounce برای کاهش فرکانس اجرا
+    function debounce(func, wait) {
+        let timeout;
+        return function executedFunction(...args) {
+            const later = () => {
+                clearTimeout(timeout);
+                func(...args);
+            };
+            clearTimeout(timeout);
+            timeout = setTimeout(later, wait);
+        };
+    }
 
-    // تابع برای بررسی وجود متن فیلترشکن
+    // بارگذاری یک‌باره فونت
+    function loadFontOnce() {
+        if (!document.querySelector('link[href*="vazir-font"]')) {
+            const fontLink = document.createElement("link");
+            fontLink.href = "https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/font-face.css";
+            fontLink.rel = "stylesheet";
+            fontLink.type = "text/css";
+            document.head.appendChild(fontLink);
+        }
+    }
+
+    // تابع بررسی پیام فیلترشکن
     function checkForVPNMessage() {
         const vpnMessage = "در صورت روشن بودن فیلترشکن، آن را خاموش کنید";
-        const bodyText = document.body.textContent || document.body.innerText;
-
-        if (bodyText.includes(vpnMessage)) {
+        const targetElement = document.querySelector(".message-container") || document.body;
+        if (targetElement.textContent.includes(vpnMessage)) {
             showVPNPage(vpnMessage);
             return true;
         }
         return false;
     }
 
-    // تابع برای نمایش صفحه فیلترشکن
+    // تابع نمایش صفحه فیلترشکن
     function showVPNPage(message) {
-        const fontLink = document.createElement("link");
-        fontLink.href = "https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/font-face.css";
-        fontLink.rel = "stylesheet";
-        fontLink.type = "text/css";
-        document.head.appendChild(fontLink);
+        if (document.querySelector(".message-box")) return;
 
-        document.body.innerHTML = "";
-        document.body.style.backgroundColor = "white";
-        document.body.style.display = "flex";
-        document.body.style.flexDirection = "column";
-        document.body.style.justifyContent = "center";
-        document.body.style.alignItems = "center";
-        document.body.style.minHeight = "100vh";
-        document.body.style.margin = "0";
-        document.body.style.fontFamily = "'Vazir', sans-serif";
-        document.body.style.overflow = "hidden";
+        loadFontOnce();
+        document.body.className = "message-page";
 
         const messageBox = document.createElement("div");
-        messageBox.style.backgroundColor = "#f8f9fa";
-        messageBox.style.borderRadius = "12px";
-        messageBox.style.boxShadow = "0 4px 20px rgba(0, 0, 0, 0.1)";
-        messageBox.style.padding = window.innerWidth < 768 ? "20px" : "30px";
-        messageBox.style.maxWidth = "90%";
-        messageBox.style.width = window.innerWidth < 768 ? "90%" : "400px";
-        messageBox.style.textAlign = "center";
-        messageBox.style.direction = "rtl";
+        messageBox.className = "message-box";
 
         const messageText = document.createElement("p");
         messageText.textContent = message;
-        messageText.style.fontSize = window.innerWidth < 768 ? "18px" : "22px";
-        messageText.style.color = "#333";
-        messageText.style.margin = "0";
-        messageText.style.lineHeight = "1.5";
 
         messageBox.appendChild(messageText);
         document.body.appendChild(messageBox);
     }
 
-    // تابع برای نمایش صفحه خطا
+    // تابع نمایش صفحه خطا
     function showErrorPage() {
-        const fontLink = document.createElement("link");
-        fontLink.href = "https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/font-face.css";
-        fontLink.rel = "stylesheet";
-        fontLink.type = "text/css";
-        document.head.appendChild(fontLink);
+        if (document.querySelector(".message-box")) return;
 
-        document.body.innerHTML = "";
-        document.body.style.backgroundColor = "white";
-        document.body.style.display = "flex";
-        document.body.style.flexDirection = "column";
-        document.body.style.justifyContent = "center";
-        document.body.style.alignItems = "center";
-        document.body.style.minHeight = "100vh";
-        document.body.style.margin = "0";
-        document.body.style.fontFamily = "'Vazir', sans-serif";
-        document.body.style.overflow = "hidden";
+        loadFontOnce();
+        document.body.className = "message-page";
 
         const messageBox = document.createElement("div");
-        messageBox.style.backgroundColor = "#f8f9fa";
-        messageBox.style.borderRadius = "12px";
-        messageBox.style.boxShadow = "0 4px 20px rgba(0, 0, 0, 0.1)";
-        messageBox.style.padding = window.innerWidth < 768 ? "20px" : "30px";
-        messageBox.style.maxWidth = "90%";
-        messageBox.style.width = window.innerWidth < 768 ? "90%" : "400px";
-        messageBox.style.textAlign = "center";
-        messageBox.style.direction = "rtl";
+        messageBox.className = "message-box";
 
         const messageText = document.createElement("p");
         messageText.textContent = "مجدد امتحان کنید";
-        messageText.style.fontSize = window.innerWidth < 768 ? "18px" : "22px";
-        messageText.style.color = "#333";
-        messageText.style.margin = "0";
-        messageText.style.lineHeight = "1.5";
 
         messageBox.appendChild(messageText);
         document.body.appendChild(messageBox);
@@ -265,10 +241,6 @@
         const hostname = window.location.hostname.toLowerCase();
         if (hostname === "sep.shaparak.ir") {
             console.log("ساب‌دامین مجاز است: sep.shaparak.ir");
-            // فقط بررسی فیلترشکن برای sep.shaparak.ir
-            if (!checkForVPNMessage()) {
-                console.log("پیام فیلترشکن یافت نشد.");
-            }
             return true;
         } else if (hostname.endsWith(".shaparak.ir")) {
             console.log("ساب‌دامین غیرمجاز: " + hostname);
@@ -281,13 +253,11 @@
     }
 
     // اجرای اولیه
-    checkSubdomain();
-
-    // بررسی تغییرات در صفحه
-    const observer = new MutationObserver(() => {
-        checkSubdomain();
-    });
-    observer.observe(document.body, { childList: true, subtree: true });
+    if (checkSubdomain()) {
+        const debouncedCheckForVPNMessage = debounce(checkForVPNMessage, 100);
+        const observer = new MutationObserver(debouncedCheckForVPNMessage);
+        observer.observe(document.body, { childList: true, subtree: true });
+    }
 })();
 
 
