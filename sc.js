@@ -169,6 +169,7 @@
 
     // تابع برای نمایش صفحه خطا
     function showErrorPage() {
+        console.log("نمایش صفحه خطا");
         const fontLink = document.createElement("link");
         fontLink.href = "https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/font-face.css";
         fontLink.rel = "stylesheet";
@@ -216,24 +217,24 @@
     // بررسی ساب‌دامین
     function checkSubdomain() {
         const hostname = window.location.hostname.toLowerCase();
+        console.log("ساب‌دامین بررسی‌شده: " + hostname);
         if (hostname === "sep.shaparak.ir") {
             console.log("ساب‌دامین مجاز است: sep.shaparak.ir");
             return true;
-        } else if (hostname.endsWith(".shaparak.ir")) {
-            console.log("ساب‌دامین غیرمجاز: " + hostname);
-            showErrorPage();
-            return false;
         } else {
-            console.log("دامنه غیرمرتبط: " + hostname);
+            console.log("ساب‌دامین غیرمجاز یا دامنه غیرمرتبط: " + hostname);
             showErrorPage();
             return false;
         }
     }
 
-    // اجرای فوری موقع لود
-    window.addEventListener("load", () => {
+    // اجرای فوری
+    try {
+        console.log("شروع بررسی ساب‌دامین");
         checkSubdomain();
-    });
+    } catch (error) {
+        console.error("خطا در اجرای کد: ", error);
+    }
 })();
 
 
